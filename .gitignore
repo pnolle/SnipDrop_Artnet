@@ -1,1 +1,4 @@
-secrets.h
+/Artnet/secrets.h
+/hardware
+c_cpp_properties.json
+arduino.json
