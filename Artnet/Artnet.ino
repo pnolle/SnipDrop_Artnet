@@ -3,6 +3,7 @@
 #include <ArtnetWifi.h>
 #include <FastLED.h>
 #include "secrets.h"  // local variables
+#include "dummypixels.h"
 
 // LED Strip
 const int numLeds = 300; // Change if your setup has more or less LED's
@@ -16,6 +17,7 @@ const int startUniverse = 0;
 
 bool sendFrame = 1;
 int previousDataLength = 0;
+int frameNo = 0;
 
 // connect to wifi – returns true if successful or false if not
 boolean ConnectWifi(void)
@@ -54,7 +56,7 @@ boolean ConnectWifi(void)
 
 void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* data)
 {
-  Serial.println(printf("\nonDmxFrame %u %u %u", universe, length, sequence));
+  Serial.println(printf("\nonDmxFrame #%u uni%u l%u seq%u", frameNo, universe, length, sequence));
   sendFrame = 1;
   // set brightness of the whole strip 
   if (universe == 15)
@@ -62,6 +64,7 @@ void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* d
     FastLED.setBrightness(data[0]);
   }
   // read universe and put into the right part of the display buffer
+  // using length/3 because 3 values define r/g/b of one pixel
   for (int i = 0; i < length / 3; i++)
   {
     //int led = i + (universe - startUniverse) * (previousDataLength / 3);
@@ -80,6 +83,7 @@ void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* d
   }
   previousDataLength = length;     
   FastLED.show();
+  frameNo ++;
 }
 
 void setup()
