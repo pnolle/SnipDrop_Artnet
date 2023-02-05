@@ -5,7 +5,7 @@
 #include "secrets.h"  // local variables
 
 // LED Strip
-const int numLeds = 150; // Change if your setup has more or less LED's
+const int numLeds = 300; // Change if your setup has more or less LED's
 const int numberOfChannels = numLeds * 3; // Total number of DMX channels you want to receive (1 led = 3 channels)
 #define DATA_PIN 12 //The data pin that the WS2812 strips are connected to.
 CRGB leds[numLeds];
@@ -24,7 +24,7 @@ boolean ConnectWifi(void)
   int i = 0;
 
   WiFi.begin(ssid, password);
-  Serial.println("");
+  Serial.println("### ARTNET ESP32 ###");
   Serial.println("Connecting to WiFi");
 
   // Wait for connection
@@ -54,8 +54,7 @@ boolean ConnectWifi(void)
 
 void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* data)
 {
-  // Serial.println(printf("onDmxFrame %u %u %u \n", universe, length, sequence));
-  // Serial.println(printf("%c", data));
+  Serial.println(printf("\nonDmxFrame %u %u %u", universe, length, sequence));
   sendFrame = 1;
   // set brightness of the whole strip 
   if (universe == 15)
@@ -65,12 +64,18 @@ void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* d
   // read universe and put into the right part of the display buffer
   for (int i = 0; i < length / 3; i++)
   {
-    int led = i + (universe - startUniverse) * (previousDataLength / 3);
+    //int led = i + (universe - startUniverse) * (previousDataLength / 3);
+
+    // half circle line length 134
+    int led = i + (universe - startUniverse) * 134;
+    
     //Serial.println(printf("numleds %i %i \n", led, numLeds));
     if (led < numLeds)
     {
       leds[led] = CRGB(data[i * 3], data[i * 3 + 1], data[i * 3 + 2]);
-      Serial.println(printf("led values %u %u %u \n", data[i * 3], data[i * 3 + 1], data[i * 3 + 2]));
+//      if (data[i * 3] != 0 || data[i * 3 + 1] != 0 || data[i * 3 + 2] != 0) {
+//        Serial.print(printf("(%u %u %u)\n", data[i * 3], data[i * 3 + 1], data[i * 3 + 2]));
+//      }
     }
   }
   previousDataLength = length;     
