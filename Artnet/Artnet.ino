@@ -19,60 +19,52 @@ int previousDataLength = 0;
 int frameNo = 0;
 int testState = 0;
 int numberOfStates = 3;
-int switchAfterFrames = 100;
+int switchAfterFrames = 20;
 
 // color state
 uint8_t colorR = 50;
 uint8_t colorG = 100;
 uint8_t colorB = 150;
 
+// regions
+uint8_t end1 = (numLeds / 2)-16;
+uint8_t end2 = numLeds-38;
+uint8_t chop1 = end1/20;
+uint8_t chop2 = (end2-end1)/20;
+uint8_t lastStart1 = 0;
+uint8_t lastStart2 = end1;
 
 void ledTestFrame()
 {
-  frameNo++;
-  if (frameNo >= switchAfterFrames)
-  {
-    testState++;
-    if (testState>numberOfStates) {
-      testState=0;
-    }
-    frameNo = 0;
-  }
   colorR++;
   colorG+=2;
   colorB+=3;
-//  Serial.println("_");
-  Serial.println(printf("COLORS %i %i %i", colorR, colorG, colorB));
-  switch (testState)
+
+  blackout();
+  for (int i = lastStart1; i < lastStart1+chop1; i++)
   {
-  case 0:
-    for (int i = 0; i < numLeds; i++)
-    {
-      leds[i] = CRGB(colorR, colorG, colorB);
-    }
-    break;
-  case 1:
-    blackout();
-    for (int i = 0; i < (numLeds / 2)-16; i++)
-    {
-      leds[i] = CRGB(colorR, colorG, colorB);
-    }
-    break;
-  case 2:
-    blackout();
-    for (int i = (numLeds / 2)-16; i < numLeds-38; i++)
-    {
-      leds[i] = CRGB(colorR, colorG, colorB);
-    }
-    break;
-  case 3:
-    blackout();
-    for (int i = numLeds-38; i < numLeds; i++)
-    {
-      leds[i] = CRGB(colorR, colorG, colorB);
-    }
-    break;
+    leds[i] = CRGB(colorR, colorG, colorB);
   }
+//  for (int j = lastStart2; j > lastStart2-5; j--)
+//  {
+//    leds[j] = CRGB(colorR, colorG, colorB);
+//  }
+
+
+  frameNo++;
+  if (frameNo >= switchAfterFrames)
+  {
+    lastStart1+=chop1;
+    lastStart2-=chop2;
+    if (lastStart1+chop1 > end1) { // || lastStart2-chop2 < end1) {
+      lastStart1 = 0;
+      lastStart2 = end2;
+    }
+    frameNo = 0;
+  }
+
+  // Serial.println("_");
+  // Serial.println(printf("COLORS %i %i %i", colorR, colorG, colorB));
   FastLED.show();
 }
 
