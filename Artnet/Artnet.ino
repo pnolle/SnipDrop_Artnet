@@ -70,14 +70,8 @@ void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* d
   {
     int led = i + (universe - startUniverse) * (previousDataLength / 3);
 
-    // half circle line length 134
-    // int led = i + (universe - startUniverse) * 134;
-    
-    //Serial.println(printf("numleds %i %i \n", led, numLeds));
     if (led < numPx)
     {
-      // leds[led] = CRGB(data[i * 3], data[i * 3 + 1], data[i * 3 + 2]);
-
       int16_t thisCount = 0;
       const int16_t *thisRegion;
 
@@ -170,119 +164,12 @@ void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* d
             thisCount = len_p21_6;
             thisRegion = p21_6;
             break;
-
-        // row 7
-        // case 19:
-        //     thisCount = len_p21_7;
-        //     thisRegion = p21_7;
-        //     break;
-        // case 20:
-        //     thisCount = len_p21_8;
-        //     thisRegion = p21_8;
-        //     break;
-        // case 21:
-        //     thisCount = len_p21_9;
-        //     thisRegion = p21_9;
-        //     break;
-        // case 22:
-        //     thisCount = len_p21_10;
-        //     thisRegion = p21_10;
-        //     break;
-        // case 23:
-        //     thisCount = len_p20_11;
-        //     thisRegion = p20_11;
-        //     break;
-        // case 24:
-        //     thisCount = len_p20_12;
-        //     thisRegion = p20_12;
-        //     break;
-        // case 25:
-        //     thisCount = len_p19_13;
-        //     thisRegion = p19_13;
-        //     break;
-        // case 26:
-        //     thisCount = len_p20_13;
-        //     thisRegion = p20_13;
-        //     break;
-        // case 27:
-        //     thisCount = len_p19_14;
-        //     thisRegion = p19_14;
-        //     break;
-        // case 28:
-        //     thisCount = len_p20_14;
-        //     thisRegion = p20_14;
-        //     break;
-        // case 29:
-        //     thisCount = len_p18_15;
-        //     thisRegion = p18_15;
-        //     break;
-        // case 30:
-        //     thisCount = len_p19_15;
-        //     thisRegion = p19_15;
-        //     break;
-        // case 31:
-        //     thisCount = len_p18_16;
-        //     thisRegion = p18_16;
-        //     break;
-        // case 32:
-        //     thisCount = len_p17_16;
-        //     thisRegion = p17_16;
-        //     break;
-        // case 33:
-        //     thisCount = len_p18_17;
-        //     thisRegion = p18_17;
-        //     break;
-        // case 34:
-        //     thisCount = len_p17_17;
-        //     thisRegion = p17_17;
-        //     break;
-        // case 35:
-        //     thisCount = len_p16_17;
-        //     thisRegion = p16_17;
-        //     break;
-        // case 36:
-        //     thisCount = len_p16_18;
-        //     thisRegion = p16_18;
-        //     break;
-        // case 37:
-        //     thisCount = len_p15_18;
-        //     thisRegion = p15_18;
-        //     break;
-        // case 38:
-        //     thisCount = len_p14_18;
-        //     thisRegion = p14_18;
-        //     break;
-        // case 39:
-        //     thisCount = len_p15_19;
-        //     thisRegion = p15_19;
-        //     break;
-        // case 40:
-        //     thisCount = len_p14_19;
-        //     thisRegion = p14_19;
-        //     break;
-        // case 41:
-        //     thisCount = len_p13_19;
-        //     thisRegion = p13_19;
-        //     break;
-        // case 42:
-        //     thisCount = len_p12_19;
-        //     thisRegion = p12_19;
-        //     break;
-        // case 43:
-        //     thisCount = len_p11_19;
-        //     thisRegion = p11_19;
-        //     break;
       }
 
       for(int l=0; l<thisCount; l++) {
-//        Serial.println(printf("illuminating led %i %i | i %i | data start: %i \n", thisRegion[l], numLeds, i, i * 3));
         leds[thisRegion[l]] = CRGB(data[i * 3], data[i * 3 + 1], data[i * 3 + 2]);
       }
     }
-//    else {
-//    //   Serial.println(printf("pixel not illuminated %i \n", led));
-//      Serial.print(".");
-//    }
   }
   previousDataLength = length;     
   FastLED.show();
@@ -302,7 +189,5 @@ void setup()
 
 void loop()
 {
-  // Serial.println("loop");
-  // we call the read function inside the loop
   artnet.read();
 }
