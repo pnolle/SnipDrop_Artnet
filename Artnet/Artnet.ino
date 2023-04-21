@@ -42,7 +42,7 @@ void ledTestFrame()
   colorG+=2;
   colorB+=3;
 //  Serial.println("_");
-  Serial.println(printf("COLORS %i %i %i", colorR, colorG, colorB));
+//  Serial.println(printf("COLORS %i %i %i", colorR, colorG, colorB));
   switch (testState)
   {
   case 0:
@@ -126,8 +126,6 @@ boolean ConnectWifi(void)
 
 void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *data)
 {
-  Serial.println("_");
-  Serial.println(printf("onDmxFrame #%u uni%u l%u seq%u", frameNo, universe, length, sequence));
   // set brightness of the whole strip
   if (universe == 15)
   {
@@ -138,6 +136,7 @@ void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *d
   for (int i = 0; i < length / 3; i++)
   {
     int led = i + (universe - startUniverse) * (previousDataLength / 3);
+    Serial.println(printf("onDmxFrame #%u => led #%i uni%u l%u seq%u", frameNo, led, universe, length, sequence));
 
     // half circle line length 134
     // int led = i + (universe - startUniverse) * 134;
@@ -367,14 +366,14 @@ void setup()
   FastLED.addLeds<WS2812, DATA_PIN, GRB>(leds, numLeds);
 
   // onDmxFrame will execute every time a packet is received by the ESP32
-  // artnet.setArtDmxCallback(onDmxFrame);
+  artnet.setArtDmxCallback(onDmxFrame);
 }
 
 void loop()
 {
   // Serial.println("loop");
   // we call the read function inside the loop
-  // artnet.read();
+  artnet.read();
 
-  ledTestFrame();
+  //ledTestFrame();
 }
