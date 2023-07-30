@@ -1,6 +1,14 @@
-# Bringing the Artnet info to the virtual pixels of SnipSign 2.0
+# SnipDrop: Bringing the Artnet info to the virtual pixels of SnipSign 2.0
 
 Qlc+ sends pixel information according to how the device is defined. 3 values define r/g/b of one pixel. We need to map the image pixels to our actual LEDs, because they are not arranged in lines.
+
+## Reason for deprecation
+This was a technical spike to try out dividing the LED sign into a matrix of rows and columns.
+=> This is the project I went live with: https://github.com/pnolle/SnipDrop_Esp32Wifi
+
+## Motivaton
+http://snippetupperlaser.com
+
 
 ## Dummy: Half Circle
 
